@@ -49,6 +49,7 @@ class SMA_SunnyBoy extends eqLogic {
 			$cron->setFunction('daemon');
 			$cron->setEnable(1);
 			$cron->setDeamon(1);
+			$cron->setDeamonSleepTime(config::byKey('pollInterval', __CLASS__, 60));
 			$cron->setTimeout(1440);
 			$cron->setSchedule('* * * * *');
 			$cron->save();
@@ -64,16 +65,11 @@ class SMA_SunnyBoy extends eqLogic {
 	}
 
 	public static function daemon() {
-		$starttime = microtime(true);
 		foreach (self::byType(__CLASS__, true) as $eqLogic) {
 			$cmd = $eqLogic->getCmd(null, 'update'); //retourne la commande 'update' si elle existe
 			if (is_object($cmd)) { //si la comande existe
 				$cmd->execCmd(); //alors on l'execute
 			}
-		}
-		$endtime = microtime(true);
-		if ($endtime - $starttime < config::byKey('pollInterval', __CLASS__, 60, true)) {
-			usleep(floor((config::byKey('pollInterval', __CLASS__) + $starttime - $endtime) * 1000000));
 		}
 	}
 
