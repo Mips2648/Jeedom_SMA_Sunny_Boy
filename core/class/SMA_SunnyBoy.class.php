@@ -20,11 +20,11 @@
 require_once __DIR__  . '/../../../../core/php/core.inc.php';
 
 class SMA_SunnyBoy extends eqLogic {
-    /*     * *************************Attributs****************************** */
+	/*     * *************************Attributs****************************** */
 
-    /*     * ***********************Methode static*************************** */
+	/*     * ***********************Methode static*************************** */
 
-  	public static function deamon_info() {
+	public static function deamon_info() {
 		$return = array();
 		$return['log'] = '';
 		$return['state'] = 'nok';
@@ -66,9 +66,9 @@ class SMA_SunnyBoy extends eqLogic {
 	public static function daemon() {
 		$starttime = microtime(true);
 		foreach (self::byType(__CLASS__, true) as $eqLogic) {
-          	$cmd = $eqLogic->getCmd(null, 'update');//retourne la commande 'update' si elle existe
-			if (is_object($cmd)) {//si la comande existe
-				$cmd->execCmd();//alors on l'execute
+			$cmd = $eqLogic->getCmd(null, 'update'); //retourne la commande 'update' si elle existe
+			if (is_object($cmd)) { //si la comande existe
+				$cmd->execCmd(); //alors on l'execute
 			}
 		}
 		$endtime = microtime(true);
@@ -76,112 +76,179 @@ class SMA_SunnyBoy extends eqLogic {
 			usleep(floor((config::byKey('pollInterval', __CLASS__) + $starttime - $endtime) * 1000000));
 		}
 	}
-    
-    /*     * *********************Méthodes d'instance************************* */
 
-    public function preInsert() {
-        
-    }
+	/*     * *********************Méthodes d'instance************************* */
 
-    public function postInsert() {
-        
-    }
+	public function preInsert() {
+	}
 
-    public function preSave() {
+	public function postInsert() {
+	}
 
-    }
+	public function preSave() {
+	}
 
-    public function postSave() {
+	public function postSave() {
 		$action = $this->getCmd(null, 'refresh');
-		if (is_object($action)) {$action->remove();}
-      
-      	$DeviceType = $this->getConfiguration("DeviceType");
-      	//Type 10 = Onduleur Monophasé
-      	//Type 20 = Onduleur Triphasé
-      	//Type 30 = Energy Meter Monophasé
-      	//Type 40 = Energy Meter Triphasé
-      
-     	if ($DeviceType == 10) { //Suppression de toutes commandes sans rapport avec un onduleur monophasé
+		if (is_object($action)) {
+			$action->remove();
+		}
+
+		$DeviceType = $this->getConfiguration("DeviceType");
+		//Type 10 = Onduleur Monophasé
+		//Type 20 = Onduleur Triphasé
+		//Type 30 = Energy Meter Monophasé
+		//Type 40 = Energy Meter Triphasé
+
+		if ($DeviceType == 10) { //Suppression de toutes commandes sans rapport avec un onduleur monophasé
 			$action = $this->getCmd(null, 'voltage_l2');
-          	if (is_object($action)) {$action->remove();}
-          	$action = $this->getCmd(null, 'voltage_l3');
-          	if (is_object($action)) {$action->remove();}
-          	$action = $this->getCmd(null, 'current_l2');
-          	if (is_object($action)) {$action->remove();}
-          	$action = $this->getCmd(null, 'current_l3');
-          	if (is_object($action)) {$action->remove();}
-          	$action = $this->getCmd(null, 'power_l2');
-          	if (is_object($action)) {$action->remove();}
-          	$action = $this->getCmd(null, 'power_l3');
-          	if (is_object($action)) {$action->remove();}
-          	$action = $this->getCmd(null, 'balance');
-          	if (is_object($action)) {$action->remove();}
-        }
-      
-      	if ($DeviceType == 20) {//Suppression de toutes commandes sans rapport avec un onduleur Triphasé
+			if (is_object($action)) {
+				$action->remove();
+			}
+			$action = $this->getCmd(null, 'voltage_l3');
+			if (is_object($action)) {
+				$action->remove();
+			}
+			$action = $this->getCmd(null, 'current_l2');
+			if (is_object($action)) {
+				$action->remove();
+			}
+			$action = $this->getCmd(null, 'current_l3');
+			if (is_object($action)) {
+				$action->remove();
+			}
+			$action = $this->getCmd(null, 'power_l2');
+			if (is_object($action)) {
+				$action->remove();
+			}
+			$action = $this->getCmd(null, 'power_l3');
+			if (is_object($action)) {
+				$action->remove();
+			}
 			$action = $this->getCmd(null, 'balance');
-          	if (is_object($action)) {$action->remove();}
-      	}
-      
-      	if ($DeviceType == 30) {//Suppression de toutes commandes sans rapport avec un Energy Meter Monophasé
+			if (is_object($action)) {
+				$action->remove();
+			}
+		}
+
+		if ($DeviceType == 20) { //Suppression de toutes commandes sans rapport avec un onduleur Triphasé
+			$action = $this->getCmd(null, 'balance');
+			if (is_object($action)) {
+				$action->remove();
+			}
+		}
+
+		if ($DeviceType == 30) { //Suppression de toutes commandes sans rapport avec un Energy Meter Monophasé
 			$action = $this->getCmd(null, 'pv_power');
-          	if (is_object($action)) {$action->remove();}
+			if (is_object($action)) {
+				$action->remove();
+			}
 			$action = $this->getCmd(null, 'pv_total');
-          	if (is_object($action)) {$action->remove();}
+			if (is_object($action)) {
+				$action->remove();
+			}
 			$action = $this->getCmd(null, 'frequency');
-          	if (is_object($action)) {$action->remove();}
+			if (is_object($action)) {
+				$action->remove();
+			}
 			$action = $this->getCmd(null, 'voltage_l2');
-          	if (is_object($action)) {$action->remove();}
-          	$action = $this->getCmd(null, 'voltage_l3');
-          	if (is_object($action)) {$action->remove();}
-          	$action = $this->getCmd(null, 'current_l2');
-          	if (is_object($action)) {$action->remove();}
-          	$action = $this->getCmd(null, 'current_l3');
-          	if (is_object($action)) {$action->remove();}
-          	$action = $this->getCmd(null, 'power_l2');
-          	if (is_object($action)) {$action->remove();}
-          	$action = $this->getCmd(null, 'power_l3');
-          	if (is_object($action)) {$action->remove();}
-          	$action = $this->getCmd(null, 'voltageDC_A');
-          	if (is_object($action)) {$action->remove();}
-          	$action = $this->getCmd(null, 'voltageDC_B');
-          	if (is_object($action)) {$action->remove();}
-          	$action = $this->getCmd(null, 'currentDC_A');
-          	if (is_object($action)) {$action->remove();}
-          	$action = $this->getCmd(null, 'currentDC_B');
-          	if (is_object($action)) {$action->remove();}
-          	$action = $this->getCmd(null, 'powerDC_A');
-          	if (is_object($action)) {$action->remove();}
-          	$action = $this->getCmd(null, 'powerDC_B');
-          	if (is_object($action)) {$action->remove();}
+			if (is_object($action)) {
+				$action->remove();
+			}
+			$action = $this->getCmd(null, 'voltage_l3');
+			if (is_object($action)) {
+				$action->remove();
+			}
+			$action = $this->getCmd(null, 'current_l2');
+			if (is_object($action)) {
+				$action->remove();
+			}
+			$action = $this->getCmd(null, 'current_l3');
+			if (is_object($action)) {
+				$action->remove();
+			}
+			$action = $this->getCmd(null, 'power_l2');
+			if (is_object($action)) {
+				$action->remove();
+			}
+			$action = $this->getCmd(null, 'power_l3');
+			if (is_object($action)) {
+				$action->remove();
+			}
+			$action = $this->getCmd(null, 'voltageDC_A');
+			if (is_object($action)) {
+				$action->remove();
+			}
+			$action = $this->getCmd(null, 'voltageDC_B');
+			if (is_object($action)) {
+				$action->remove();
+			}
+			$action = $this->getCmd(null, 'currentDC_A');
+			if (is_object($action)) {
+				$action->remove();
+			}
+			$action = $this->getCmd(null, 'currentDC_B');
+			if (is_object($action)) {
+				$action->remove();
+			}
+			$action = $this->getCmd(null, 'powerDC_A');
+			if (is_object($action)) {
+				$action->remove();
+			}
+			$action = $this->getCmd(null, 'powerDC_B');
+			if (is_object($action)) {
+				$action->remove();
+			}
 			$action = $this->getCmd(null, 'wifi_signal');
-          	if (is_object($action)) {$action->remove();}
-      	}
-      
-		if ($DeviceType == 40) {//Suppression de toutes commandes sans rapport avec un Energy Meter Triphasé
+			if (is_object($action)) {
+				$action->remove();
+			}
+		}
+
+		if ($DeviceType == 40) { //Suppression de toutes commandes sans rapport avec un Energy Meter Triphasé
 			$action = $this->getCmd(null, 'pv_power');
-          	if (is_object($action)) {$action->remove();}
+			if (is_object($action)) {
+				$action->remove();
+			}
 			$action = $this->getCmd(null, 'pv_total');
-          	if (is_object($action)) {$action->remove();}
+			if (is_object($action)) {
+				$action->remove();
+			}
 			$action = $this->getCmd(null, 'frequency');
-          	if (is_object($action)) {$action->remove();}
-          	$action = $this->getCmd(null, 'voltageDC_A');
-          	if (is_object($action)) {$action->remove();}
-          	$action = $this->getCmd(null, 'voltageDC_B');
-          	if (is_object($action)) {$action->remove();}
-          	$action = $this->getCmd(null, 'currentDC_A');
-          	if (is_object($action)) {$action->remove();}
-          	$action = $this->getCmd(null, 'currentDC_B');
-          	if (is_object($action)) {$action->remove();}
-          	$action = $this->getCmd(null, 'powerDC_A');
-          	if (is_object($action)) {$action->remove();}
-          	$action = $this->getCmd(null, 'powerDC_B');
-          	if (is_object($action)) {$action->remove();}
+			if (is_object($action)) {
+				$action->remove();
+			}
+			$action = $this->getCmd(null, 'voltageDC_A');
+			if (is_object($action)) {
+				$action->remove();
+			}
+			$action = $this->getCmd(null, 'voltageDC_B');
+			if (is_object($action)) {
+				$action->remove();
+			}
+			$action = $this->getCmd(null, 'currentDC_A');
+			if (is_object($action)) {
+				$action->remove();
+			}
+			$action = $this->getCmd(null, 'currentDC_B');
+			if (is_object($action)) {
+				$action->remove();
+			}
+			$action = $this->getCmd(null, 'powerDC_A');
+			if (is_object($action)) {
+				$action->remove();
+			}
+			$action = $this->getCmd(null, 'powerDC_B');
+			if (is_object($action)) {
+				$action->remove();
+			}
 			$action = $this->getCmd(null, 'wifi_signal');
-          	if (is_object($action)) {$action->remove();}
-      	}
-      
-      	if ($DeviceType == 10) { //Onduleur Monophasé
+			if (is_object($action)) {
+				$action->remove();
+			}
+		}
+
+		if ($DeviceType == 10) { //Onduleur Monophasé
 			$info = $this->getCmd(null, 'pv_power');
 			if (!is_object($info)) {
 				$info = new SMA_SunnyBoyCmd();
@@ -196,10 +263,10 @@ class SMA_SunnyBoy extends eqLogic {
 				$info->setConfiguration('maxValue', $this->getConfiguration("Power"));
 				$info->setIsHistorized(1);
 				$info->setUnite('W');
-              	$info->setOrder(1);
+				$info->setOrder(1);
 			}
 			$info->save();
-		
+
 			$info = $this->getCmd(null, 'pv_total');
 			if (!is_object($info)) {
 				$info = new SMA_SunnyBoyCmd();
@@ -208,15 +275,15 @@ class SMA_SunnyBoy extends eqLogic {
 				$info->setEqLogic_id($this->getId());
 				$info->setType('info');
 				$info->setSubType('numeric');
-				$info->setTemplate('dashboard','line');
-				$info->setTemplate('mobile','line');
-          		$info->setConfiguration('historizeRound', 2);
+				$info->setTemplate('dashboard', 'line');
+				$info->setTemplate('mobile', 'line');
+				$info->setConfiguration('historizeRound', 2);
 				$info->setIsHistorized(1);
 				$info->setUnite('Wh');
-              	$info->setOrder(2);
+				$info->setOrder(2);
 			}
 			$info->save();
-		
+
 			$info = $this->getCmd(null, 'frequency');
 			if (!is_object($info)) {
 				$info = new SMA_SunnyBoyCmd();
@@ -225,16 +292,16 @@ class SMA_SunnyBoy extends eqLogic {
 				$info->setEqLogic_id($this->getId());
 				$info->setType('info');
 				$info->setSubType('numeric');
-				$info->setTemplate('dashboard','line');
-				$info->setTemplate('mobile','line');          
+				$info->setTemplate('dashboard', 'line');
+				$info->setTemplate('mobile', 'line');
 				$info->setConfiguration('minValue', 0);
 				$info->setConfiguration('maxValue', 60);
 				$info->setIsHistorized(1);
 				$info->setUnite('Hz');
-				$info->setOrder(3);              
+				$info->setOrder(3);
 			}
 			$info->save();
-		
+
 			$info = $this->getCmd(null, 'voltage_l1');
 			if (!is_object($info)) {
 				$info = new SMA_SunnyBoyCmd();
@@ -243,16 +310,16 @@ class SMA_SunnyBoy extends eqLogic {
 				$info->setEqLogic_id($this->getId());
 				$info->setType('info');
 				$info->setSubType('numeric');
-				$info->setTemplate('dashboard','line');
-				$info->setTemplate('mobile','line');          
+				$info->setTemplate('dashboard', 'line');
+				$info->setTemplate('mobile', 'line');
 				$info->setConfiguration('minValue', 0);
 				$info->setConfiguration('maxValue', 250);
 				$info->setIsHistorized(1);
 				$info->setUnite('V');
-				$info->setOrder(4);              
+				$info->setOrder(4);
 			}
 			$info->save();
-          
+
 			$info = $this->getCmd(null, 'current_l1');
 			if (!is_object($info)) {
 				$info = new SMA_SunnyBoyCmd();
@@ -261,17 +328,17 @@ class SMA_SunnyBoy extends eqLogic {
 				$info->setEqLogic_id($this->getId());
 				$info->setType('info');
 				$info->setSubType('numeric');
-				$info->setTemplate('dashboard','line');
-				$info->setTemplate('mobile','line');          
+				$info->setTemplate('dashboard', 'line');
+				$info->setTemplate('mobile', 'line');
 				$info->setConfiguration('minValue', 0);
 				$info->setConfiguration('maxValue', 50);
 				$info->setIsHistorized(1);
 				$info->setUnite('A');
-				$info->setOrder(5);              
+				$info->setOrder(5);
 			}
 			$info->save();
-          
-         	$info = $this->getCmd(null, 'power_l1');
+
+			$info = $this->getCmd(null, 'power_l1');
 			if (!is_object($info)) {
 				$info = new SMA_SunnyBoyCmd();
 				$info->setName(__('Puissance L1', __FILE__));
@@ -279,17 +346,17 @@ class SMA_SunnyBoy extends eqLogic {
 				$info->setEqLogic_id($this->getId());
 				$info->setType('info');
 				$info->setSubType('numeric');
-				$info->setTemplate('dashboard','line');
-				$info->setTemplate('mobile','line');          
+				$info->setTemplate('dashboard', 'line');
+				$info->setTemplate('mobile', 'line');
 				$info->setConfiguration('minValue', 0);
 				$info->setConfiguration('maxValue', 10000);
 				$info->setIsHistorized(1);
 				$info->setUnite('W');
-				$info->setOrder(6);              
+				$info->setOrder(6);
 			}
 			$info->save();
-          
-         	$info = $this->getCmd(null, 'voltageDC_A');
+
+			$info = $this->getCmd(null, 'voltageDC_A');
 			if (!is_object($info)) {
 				$info = new SMA_SunnyBoyCmd();
 				$info->setName(__('Tension DC-A', __FILE__));
@@ -297,17 +364,17 @@ class SMA_SunnyBoy extends eqLogic {
 				$info->setEqLogic_id($this->getId());
 				$info->setType('info');
 				$info->setSubType('numeric');
-				$info->setTemplate('dashboard','line');
-				$info->setTemplate('mobile','line');          
+				$info->setTemplate('dashboard', 'line');
+				$info->setTemplate('mobile', 'line');
 				$info->setConfiguration('minValue', 0);
 				$info->setConfiguration('maxValue', 1000);
 				$info->setIsHistorized(1);
 				$info->setUnite('V');
-				$info->setOrder(7);              
+				$info->setOrder(7);
 			}
 			$info->save();
-          
-         	$info = $this->getCmd(null, 'voltageDC_B');
+
+			$info = $this->getCmd(null, 'voltageDC_B');
 			if (!is_object($info)) {
 				$info = new SMA_SunnyBoyCmd();
 				$info->setName(__('Tension DC-B', __FILE__));
@@ -315,17 +382,17 @@ class SMA_SunnyBoy extends eqLogic {
 				$info->setEqLogic_id($this->getId());
 				$info->setType('info');
 				$info->setSubType('numeric');
-				$info->setTemplate('dashboard','line');
-				$info->setTemplate('mobile','line');          
+				$info->setTemplate('dashboard', 'line');
+				$info->setTemplate('mobile', 'line');
 				$info->setConfiguration('minValue', 0);
 				$info->setConfiguration('maxValue', 1000);
 				$info->setIsHistorized(1);
 				$info->setUnite('V');
-				$info->setOrder(8);              
+				$info->setOrder(8);
 			}
 			$info->save();
 
-         	$info = $this->getCmd(null, 'currentDC_A');
+			$info = $this->getCmd(null, 'currentDC_A');
 			if (!is_object($info)) {
 				$info = new SMA_SunnyBoyCmd();
 				$info->setName(__('Intensité DC-A', __FILE__));
@@ -333,17 +400,17 @@ class SMA_SunnyBoy extends eqLogic {
 				$info->setEqLogic_id($this->getId());
 				$info->setType('info');
 				$info->setSubType('numeric');
-				$info->setTemplate('dashboard','line');
-				$info->setTemplate('mobile','line');          
+				$info->setTemplate('dashboard', 'line');
+				$info->setTemplate('mobile', 'line');
 				$info->setConfiguration('minValue', 0);
 				$info->setConfiguration('maxValue', 50);
 				$info->setIsHistorized(1);
 				$info->setUnite('A');
-				$info->setOrder(9);              
+				$info->setOrder(9);
 			}
 			$info->save();
-          
-         	$info = $this->getCmd(null, 'currentDC_B');
+
+			$info = $this->getCmd(null, 'currentDC_B');
 			if (!is_object($info)) {
 				$info = new SMA_SunnyBoyCmd();
 				$info->setName(__('Intensité DC-B', __FILE__));
@@ -351,17 +418,17 @@ class SMA_SunnyBoy extends eqLogic {
 				$info->setEqLogic_id($this->getId());
 				$info->setType('info');
 				$info->setSubType('numeric');
-				$info->setTemplate('dashboard','line');
-				$info->setTemplate('mobile','line');          
+				$info->setTemplate('dashboard', 'line');
+				$info->setTemplate('mobile', 'line');
 				$info->setConfiguration('minValue', 0);
 				$info->setConfiguration('maxValue', 50);
 				$info->setIsHistorized(1);
 				$info->setUnite('A');
-				$info->setOrder(10);              
+				$info->setOrder(10);
 			}
 			$info->save();
-          
-         	$info = $this->getCmd(null, 'powerDC_A');
+
+			$info = $this->getCmd(null, 'powerDC_A');
 			if (!is_object($info)) {
 				$info = new SMA_SunnyBoyCmd();
 				$info->setName(__('Puissance DC-A', __FILE__));
@@ -369,17 +436,17 @@ class SMA_SunnyBoy extends eqLogic {
 				$info->setEqLogic_id($this->getId());
 				$info->setType('info');
 				$info->setSubType('numeric');
-				$info->setTemplate('dashboard','line');
-				$info->setTemplate('mobile','line');          
+				$info->setTemplate('dashboard', 'line');
+				$info->setTemplate('mobile', 'line');
 				$info->setConfiguration('minValue', 0);
 				$info->setConfiguration('maxValue', 10000);
 				$info->setIsHistorized(1);
 				$info->setUnite('W');
-				$info->setOrder(11);              
+				$info->setOrder(11);
 			}
 			$info->save();
-          
-         	$info = $this->getCmd(null, 'powerDC_B');
+
+			$info = $this->getCmd(null, 'powerDC_B');
 			if (!is_object($info)) {
 				$info = new SMA_SunnyBoyCmd();
 				$info->setName(__('Puissance DC-B', __FILE__));
@@ -387,16 +454,16 @@ class SMA_SunnyBoy extends eqLogic {
 				$info->setEqLogic_id($this->getId());
 				$info->setType('info');
 				$info->setSubType('numeric');
-				$info->setTemplate('dashboard','line');
-				$info->setTemplate('mobile','line');          
+				$info->setTemplate('dashboard', 'line');
+				$info->setTemplate('mobile', 'line');
 				$info->setConfiguration('minValue', 0);
 				$info->setConfiguration('maxValue', 10000);
 				$info->setIsHistorized(1);
 				$info->setUnite('W');
-				$info->setOrder(12);              
+				$info->setOrder(12);
 			}
 			$info->save();
-          
+
 			$info = $this->getCmd(null, 'wifi_signal');
 			if (!is_object($info)) {
 				$info = new SMA_SunnyBoyCmd();
@@ -405,16 +472,16 @@ class SMA_SunnyBoy extends eqLogic {
 				$info->setEqLogic_id($this->getId());
 				$info->setType('info');
 				$info->setSubType('numeric');
-				$info->setTemplate('dashboard','line');
-				$info->setTemplate('mobile','line');          
+				$info->setTemplate('dashboard', 'line');
+				$info->setTemplate('mobile', 'line');
 				$info->setConfiguration('minValue', 0);
 				$info->setConfiguration('maxValue', 100);
 				$info->setIsHistorized(1);
 				$info->setUnite('%');
-				$info->setOrder(13);              
+				$info->setOrder(13);
 			}
 			$info->save();
-          
+
 			$info = $this->getCmd(null, 'sessionID');
 			if (!is_object($info)) {
 				$info = new SMA_SunnyBoyCmd();
@@ -425,10 +492,10 @@ class SMA_SunnyBoy extends eqLogic {
 				$info->setSubType('string');
 				$info->setIsHistorized(0);
 				$info->setIsVisible(0);
-				$info->setOrder(14);              
+				$info->setOrder(14);
 			}
 			$info->save();
-		
+
 			$info = $this->getCmd(null, 'status');
 			if (!is_object($info)) {
 				$info = new SMA_SunnyBoyCmd();
@@ -439,11 +506,11 @@ class SMA_SunnyBoy extends eqLogic {
 				$info->setSubType('string');
 				$info->setIsHistorized(0);
 				$info->setIsVisible(1);
-				$info->setOrder(15);              
+				$info->setOrder(15);
 			}
 			$info->save();
-		
-     		$refresh = $this->getCmd(null, 'update');
+
+			$refresh = $this->getCmd(null, 'update');
 			if (!is_object($refresh)) {
 				$refresh = new SMA_SunnyBoyCmd();
 				$refresh->setName(__('Rafraîchir', __FILE__));
@@ -451,13 +518,13 @@ class SMA_SunnyBoy extends eqLogic {
 				$refresh->setLogicalId('update');
 				$refresh->setType('action');
 				$refresh->setSubType('other');
-    			$refresh->setIsVisible(0);
-				$refresh->setOrder(50);              
+				$refresh->setIsVisible(0);
+				$refresh->setOrder(50);
 			}
 			$refresh->save();
-        }
-      
-      	if ($DeviceType == 20) { //Onduleur Triphasé
+		}
+
+		if ($DeviceType == 20) { //Onduleur Triphasé
 			$info = $this->getCmd(null, 'pv_power');
 			if (!is_object($info)) {
 				$info = new SMA_SunnyBoyCmd();
@@ -467,15 +534,15 @@ class SMA_SunnyBoy extends eqLogic {
 				$info->setType('info');
 				$info->setSubType('numeric');
 				//$info->setTemplate('dashboard','line');
-				//$info->setTemplate('mobile','line');          
+				//$info->setTemplate('mobile','line');
 				$info->setConfiguration('minValue', 0);
 				$info->setConfiguration('maxValue', $this->getConfiguration("Power"));
 				$info->setIsHistorized(1);
 				$info->setUnite('W');
-				$info->setOrder(1);              
+				$info->setOrder(1);
 			}
 			$info->save();
-		
+
 			$info = $this->getCmd(null, 'pv_total');
 			if (!is_object($info)) {
 				$info = new SMA_SunnyBoyCmd();
@@ -484,15 +551,15 @@ class SMA_SunnyBoy extends eqLogic {
 				$info->setEqLogic_id($this->getId());
 				$info->setType('info');
 				$info->setSubType('numeric');
-				$info->setTemplate('dashboard','line');
-				$info->setTemplate('mobile','line');
-          		$info->setConfiguration('historizeRound', 2);
+				$info->setTemplate('dashboard', 'line');
+				$info->setTemplate('mobile', 'line');
+				$info->setConfiguration('historizeRound', 2);
 				$info->setIsHistorized(1);
 				$info->setUnite('Wh');
-				$info->setOrder(2);              
+				$info->setOrder(2);
 			}
 			$info->save();
-		
+
 			$info = $this->getCmd(null, 'frequency');
 			if (!is_object($info)) {
 				$info = new SMA_SunnyBoyCmd();
@@ -501,16 +568,16 @@ class SMA_SunnyBoy extends eqLogic {
 				$info->setEqLogic_id($this->getId());
 				$info->setType('info');
 				$info->setSubType('numeric');
-				$info->setTemplate('dashboard','line');
-				$info->setTemplate('mobile','line');          
+				$info->setTemplate('dashboard', 'line');
+				$info->setTemplate('mobile', 'line');
 				$info->setConfiguration('minValue', 0);
 				$info->setConfiguration('maxValue', 60);
 				$info->setIsHistorized(1);
 				$info->setUnite('Hz');
-				$info->setOrder(3);              
+				$info->setOrder(3);
 			}
 			$info->save();
-		
+
 			$info = $this->getCmd(null, 'voltage_l1');
 			if (!is_object($info)) {
 				$info = new SMA_SunnyBoyCmd();
@@ -519,16 +586,16 @@ class SMA_SunnyBoy extends eqLogic {
 				$info->setEqLogic_id($this->getId());
 				$info->setType('info');
 				$info->setSubType('numeric');
-				$info->setTemplate('dashboard','line');
-				$info->setTemplate('mobile','line');          
+				$info->setTemplate('dashboard', 'line');
+				$info->setTemplate('mobile', 'line');
 				$info->setConfiguration('minValue', 0);
 				$info->setConfiguration('maxValue', 250);
 				$info->setIsHistorized(1);
 				$info->setUnite('V');
-				$info->setOrder(4);              
+				$info->setOrder(4);
 			}
 			$info->save();
-          
+
 			$info = $this->getCmd(null, 'voltage_l2');
 			if (!is_object($info)) {
 				$info = new SMA_SunnyBoyCmd();
@@ -537,16 +604,16 @@ class SMA_SunnyBoy extends eqLogic {
 				$info->setEqLogic_id($this->getId());
 				$info->setType('info');
 				$info->setSubType('numeric');
-				$info->setTemplate('dashboard','line');
-				$info->setTemplate('mobile','line');          
+				$info->setTemplate('dashboard', 'line');
+				$info->setTemplate('mobile', 'line');
 				$info->setConfiguration('minValue', 0);
 				$info->setConfiguration('maxValue', 250);
 				$info->setIsHistorized(1);
 				$info->setUnite('V');
-				$info->setOrder(5);              
+				$info->setOrder(5);
 			}
 			$info->save();
-		
+
 			$info = $this->getCmd(null, 'voltage_l3');
 			if (!is_object($info)) {
 				$info = new SMA_SunnyBoyCmd();
@@ -555,13 +622,13 @@ class SMA_SunnyBoy extends eqLogic {
 				$info->setEqLogic_id($this->getId());
 				$info->setType('info');
 				$info->setSubType('numeric');
-				$info->setTemplate('dashboard','line');
-				$info->setTemplate('mobile','line');          
+				$info->setTemplate('dashboard', 'line');
+				$info->setTemplate('mobile', 'line');
 				$info->setConfiguration('minValue', 0);
 				$info->setConfiguration('maxValue', 250);
 				$info->setIsHistorized(1);
 				$info->setUnite('V');
-				$info->setOrder(6);              
+				$info->setOrder(6);
 			}
 			$info->save();
 
@@ -573,16 +640,16 @@ class SMA_SunnyBoy extends eqLogic {
 				$info->setEqLogic_id($this->getId());
 				$info->setType('info');
 				$info->setSubType('numeric');
-				$info->setTemplate('dashboard','line');
-				$info->setTemplate('mobile','line');          
+				$info->setTemplate('dashboard', 'line');
+				$info->setTemplate('mobile', 'line');
 				$info->setConfiguration('minValue', 0);
 				$info->setConfiguration('maxValue', 50);
 				$info->setIsHistorized(1);
 				$info->setUnite('A');
-				$info->setOrder(7);              
+				$info->setOrder(7);
 			}
 			$info->save();
-      		
+
 			$info = $this->getCmd(null, 'current_l2');
 			if (!is_object($info)) {
 				$info = new SMA_SunnyBoyCmd();
@@ -591,16 +658,16 @@ class SMA_SunnyBoy extends eqLogic {
 				$info->setEqLogic_id($this->getId());
 				$info->setType('info');
 				$info->setSubType('numeric');
-				$info->setTemplate('dashboard','line');
-				$info->setTemplate('mobile','line');          
+				$info->setTemplate('dashboard', 'line');
+				$info->setTemplate('mobile', 'line');
 				$info->setConfiguration('minValue', 0);
 				$info->setConfiguration('maxValue', 50);
 				$info->setIsHistorized(1);
 				$info->setUnite('A');
-				$info->setOrder(8);              
+				$info->setOrder(8);
 			}
 			$info->save();
-		
+
 			$info = $this->getCmd(null, 'current_l3');
 			if (!is_object($info)) {
 				$info = new SMA_SunnyBoyCmd();
@@ -609,17 +676,17 @@ class SMA_SunnyBoy extends eqLogic {
 				$info->setEqLogic_id($this->getId());
 				$info->setType('info');
 				$info->setSubType('numeric');
-				$info->setTemplate('dashboard','line');
-				$info->setTemplate('mobile','line');          
+				$info->setTemplate('dashboard', 'line');
+				$info->setTemplate('mobile', 'line');
 				$info->setConfiguration('minValue', 0);
 				$info->setConfiguration('maxValue', 50);
 				$info->setIsHistorized(1);
 				$info->setUnite('A');
-				$info->setOrder(9);              
+				$info->setOrder(9);
 			}
 			$info->save();
-          
-         	$info = $this->getCmd(null, 'power_l1');
+
+			$info = $this->getCmd(null, 'power_l1');
 			if (!is_object($info)) {
 				$info = new SMA_SunnyBoyCmd();
 				$info->setName(__('Puissance L1', __FILE__));
@@ -627,17 +694,17 @@ class SMA_SunnyBoy extends eqLogic {
 				$info->setEqLogic_id($this->getId());
 				$info->setType('info');
 				$info->setSubType('numeric');
-				$info->setTemplate('dashboard','line');
-				$info->setTemplate('mobile','line');          
+				$info->setTemplate('dashboard', 'line');
+				$info->setTemplate('mobile', 'line');
 				$info->setConfiguration('minValue', 0);
 				$info->setConfiguration('maxValue', 10000);
 				$info->setIsHistorized(1);
 				$info->setUnite('W');
-				$info->setOrder(10);              
+				$info->setOrder(10);
 			}
 			$info->save();
-          
-         	$info = $this->getCmd(null, 'power_l2');
+
+			$info = $this->getCmd(null, 'power_l2');
 			if (!is_object($info)) {
 				$info = new SMA_SunnyBoyCmd();
 				$info->setName(__('Puissance L2', __FILE__));
@@ -645,17 +712,17 @@ class SMA_SunnyBoy extends eqLogic {
 				$info->setEqLogic_id($this->getId());
 				$info->setType('info');
 				$info->setSubType('numeric');
-				$info->setTemplate('dashboard','line');
-				$info->setTemplate('mobile','line');          
+				$info->setTemplate('dashboard', 'line');
+				$info->setTemplate('mobile', 'line');
 				$info->setConfiguration('minValue', 0);
 				$info->setConfiguration('maxValue', 10000);
 				$info->setIsHistorized(1);
 				$info->setUnite('W');
-				$info->setOrder(11);              
+				$info->setOrder(11);
 			}
 			$info->save();
-          
-         	$info = $this->getCmd(null, 'power_l3');
+
+			$info = $this->getCmd(null, 'power_l3');
 			if (!is_object($info)) {
 				$info = new SMA_SunnyBoyCmd();
 				$info->setName(__('Puissance L3', __FILE__));
@@ -663,17 +730,17 @@ class SMA_SunnyBoy extends eqLogic {
 				$info->setEqLogic_id($this->getId());
 				$info->setType('info');
 				$info->setSubType('numeric');
-				$info->setTemplate('dashboard','line');
-				$info->setTemplate('mobile','line');          
+				$info->setTemplate('dashboard', 'line');
+				$info->setTemplate('mobile', 'line');
 				$info->setConfiguration('minValue', 0);
 				$info->setConfiguration('maxValue', 10000);
 				$info->setIsHistorized(1);
 				$info->setUnite('W');
-				$info->setOrder(12);              
+				$info->setOrder(12);
 			}
 			$info->save();
-          
-         	$info = $this->getCmd(null, 'voltageDC_A');
+
+			$info = $this->getCmd(null, 'voltageDC_A');
 			if (!is_object($info)) {
 				$info = new SMA_SunnyBoyCmd();
 				$info->setName(__('Tension DC-A', __FILE__));
@@ -681,17 +748,17 @@ class SMA_SunnyBoy extends eqLogic {
 				$info->setEqLogic_id($this->getId());
 				$info->setType('info');
 				$info->setSubType('numeric');
-				$info->setTemplate('dashboard','line');
-				$info->setTemplate('mobile','line');          
+				$info->setTemplate('dashboard', 'line');
+				$info->setTemplate('mobile', 'line');
 				$info->setConfiguration('minValue', 0);
 				$info->setConfiguration('maxValue', 1000);
 				$info->setIsHistorized(1);
 				$info->setUnite('V');
-				$info->setOrder(13);              
+				$info->setOrder(13);
 			}
 			$info->save();
-          
-         	$info = $this->getCmd(null, 'voltageDC_B');
+
+			$info = $this->getCmd(null, 'voltageDC_B');
 			if (!is_object($info)) {
 				$info = new SMA_SunnyBoyCmd();
 				$info->setName(__('Tension DC-B', __FILE__));
@@ -699,17 +766,17 @@ class SMA_SunnyBoy extends eqLogic {
 				$info->setEqLogic_id($this->getId());
 				$info->setType('info');
 				$info->setSubType('numeric');
-				$info->setTemplate('dashboard','line');
-				$info->setTemplate('mobile','line');          
+				$info->setTemplate('dashboard', 'line');
+				$info->setTemplate('mobile', 'line');
 				$info->setConfiguration('minValue', 0);
 				$info->setConfiguration('maxValue', 1000);
 				$info->setIsHistorized(1);
 				$info->setUnite('V');
-				$info->setOrder(14);              
+				$info->setOrder(14);
 			}
 			$info->save();
 
-         	$info = $this->getCmd(null, 'currentDC_A');
+			$info = $this->getCmd(null, 'currentDC_A');
 			if (!is_object($info)) {
 				$info = new SMA_SunnyBoyCmd();
 				$info->setName(__('Intensité DC-A', __FILE__));
@@ -717,17 +784,17 @@ class SMA_SunnyBoy extends eqLogic {
 				$info->setEqLogic_id($this->getId());
 				$info->setType('info');
 				$info->setSubType('numeric');
-				$info->setTemplate('dashboard','line');
-				$info->setTemplate('mobile','line');          
+				$info->setTemplate('dashboard', 'line');
+				$info->setTemplate('mobile', 'line');
 				$info->setConfiguration('minValue', 0);
 				$info->setConfiguration('maxValue', 50);
 				$info->setIsHistorized(1);
 				$info->setUnite('A');
-				$info->setOrder(15);              
+				$info->setOrder(15);
 			}
 			$info->save();
-          
-         	$info = $this->getCmd(null, 'currentDC_B');
+
+			$info = $this->getCmd(null, 'currentDC_B');
 			if (!is_object($info)) {
 				$info = new SMA_SunnyBoyCmd();
 				$info->setName(__('Intensité DC-B', __FILE__));
@@ -735,17 +802,17 @@ class SMA_SunnyBoy extends eqLogic {
 				$info->setEqLogic_id($this->getId());
 				$info->setType('info');
 				$info->setSubType('numeric');
-				$info->setTemplate('dashboard','line');
-				$info->setTemplate('mobile','line');          
+				$info->setTemplate('dashboard', 'line');
+				$info->setTemplate('mobile', 'line');
 				$info->setConfiguration('minValue', 0);
 				$info->setConfiguration('maxValue', 50);
 				$info->setIsHistorized(1);
 				$info->setUnite('A');
-				$info->setOrder(16);              
+				$info->setOrder(16);
 			}
 			$info->save();
-          
-         	$info = $this->getCmd(null, 'powerDC_A');
+
+			$info = $this->getCmd(null, 'powerDC_A');
 			if (!is_object($info)) {
 				$info = new SMA_SunnyBoyCmd();
 				$info->setName(__('Puissance DC-A', __FILE__));
@@ -753,17 +820,17 @@ class SMA_SunnyBoy extends eqLogic {
 				$info->setEqLogic_id($this->getId());
 				$info->setType('info');
 				$info->setSubType('numeric');
-				$info->setTemplate('dashboard','line');
-				$info->setTemplate('mobile','line');          
+				$info->setTemplate('dashboard', 'line');
+				$info->setTemplate('mobile', 'line');
 				$info->setConfiguration('minValue', 0);
 				$info->setConfiguration('maxValue', 10000);
 				$info->setIsHistorized(1);
 				$info->setUnite('W');
-				$info->setOrder(17);              
+				$info->setOrder(17);
 			}
 			$info->save();
-          
-         	$info = $this->getCmd(null, 'powerDC_B');
+
+			$info = $this->getCmd(null, 'powerDC_B');
 			if (!is_object($info)) {
 				$info = new SMA_SunnyBoyCmd();
 				$info->setName(__('Puissance DC-B', __FILE__));
@@ -771,16 +838,16 @@ class SMA_SunnyBoy extends eqLogic {
 				$info->setEqLogic_id($this->getId());
 				$info->setType('info');
 				$info->setSubType('numeric');
-				$info->setTemplate('dashboard','line');
-				$info->setTemplate('mobile','line');          
+				$info->setTemplate('dashboard', 'line');
+				$info->setTemplate('mobile', 'line');
 				$info->setConfiguration('minValue', 0);
 				$info->setConfiguration('maxValue', 10000);
 				$info->setIsHistorized(1);
 				$info->setUnite('W');
-				$info->setOrder(18);              
+				$info->setOrder(18);
 			}
 			$info->save();
-          
+
 			$info = $this->getCmd(null, 'wifi_signal');
 			if (!is_object($info)) {
 				$info = new SMA_SunnyBoyCmd();
@@ -789,16 +856,16 @@ class SMA_SunnyBoy extends eqLogic {
 				$info->setEqLogic_id($this->getId());
 				$info->setType('info');
 				$info->setSubType('numeric');
-				$info->setTemplate('dashboard','line');
-				$info->setTemplate('mobile','line');          
+				$info->setTemplate('dashboard', 'line');
+				$info->setTemplate('mobile', 'line');
 				$info->setConfiguration('minValue', 0);
 				$info->setConfiguration('maxValue', 100);
 				$info->setIsHistorized(1);
 				$info->setUnite('%');
-				$info->setOrder(19);              
+				$info->setOrder(19);
 			}
 			$info->save();
-          
+
 			$info = $this->getCmd(null, 'sessionID');
 			if (!is_object($info)) {
 				$info = new SMA_SunnyBoyCmd();
@@ -809,10 +876,10 @@ class SMA_SunnyBoy extends eqLogic {
 				$info->setSubType('string');
 				$info->setIsHistorized(0);
 				$info->setIsVisible(0);
-				$info->setOrder(20);              
+				$info->setOrder(20);
 			}
 			$info->save();
-		
+
 			$info = $this->getCmd(null, 'status');
 			if (!is_object($info)) {
 				$info = new SMA_SunnyBoyCmd();
@@ -823,11 +890,11 @@ class SMA_SunnyBoy extends eqLogic {
 				$info->setSubType('string');
 				$info->setIsHistorized(0);
 				$info->setIsVisible(1);
-				$info->setOrder(21);              
+				$info->setOrder(21);
 			}
 			$info->save();
-		
-     		$refresh = $this->getCmd(null, 'update');
+
+			$refresh = $this->getCmd(null, 'update');
 			if (!is_object($refresh)) {
 				$refresh = new SMA_SunnyBoyCmd();
 				$refresh->setName(__('Rafraîchir', __FILE__));
@@ -835,13 +902,13 @@ class SMA_SunnyBoy extends eqLogic {
 				$refresh->setLogicalId('update');
 				$refresh->setType('action');
 				$refresh->setSubType('other');
-    			$refresh->setIsVisible(0);
-				$refresh->setOrder(50);              
+				$refresh->setIsVisible(0);
+				$refresh->setOrder(50);
 			}
 			$refresh->save();
 		}
-      
-      	if ($DeviceType == 30) { //Energy Meter Monophasé
+
+		if ($DeviceType == 30) { //Energy Meter Monophasé
 			$info = $this->getCmd(null, 'balance');
 			if (!is_object($info)) {
 				$info = new SMA_SunnyBoyCmd();
@@ -850,16 +917,16 @@ class SMA_SunnyBoy extends eqLogic {
 				$info->setEqLogic_id($this->getId());
 				$info->setType('info');
 				$info->setSubType('numeric');
-				$info->setTemplate('dashboard','line');
-				$info->setTemplate('mobile','line');          
+				$info->setTemplate('dashboard', 'line');
+				$info->setTemplate('mobile', 'line');
 				$info->setConfiguration('minValue', -20000);
 				$info->setConfiguration('maxValue', 20000);
 				$info->setIsHistorized(1);
 				$info->setUnite('W');
-				$info->setOrder(1);              
+				$info->setOrder(1);
 			}
 			$info->save();
-          
+
 			$info = $this->getCmd(null, 'voltage_l1');
 			if (!is_object($info)) {
 				$info = new SMA_SunnyBoyCmd();
@@ -868,16 +935,16 @@ class SMA_SunnyBoy extends eqLogic {
 				$info->setEqLogic_id($this->getId());
 				$info->setType('info');
 				$info->setSubType('numeric');
-				$info->setTemplate('dashboard','line');
-				$info->setTemplate('mobile','line');          
+				$info->setTemplate('dashboard', 'line');
+				$info->setTemplate('mobile', 'line');
 				$info->setConfiguration('minValue', 0);
 				$info->setConfiguration('maxValue', 250);
 				$info->setIsHistorized(1);
 				$info->setUnite('V');
-				$info->setOrder(2);              
+				$info->setOrder(2);
 			}
 			$info->save();
-          
+
 			$info = $this->getCmd(null, 'current_l1');
 			if (!is_object($info)) {
 				$info = new SMA_SunnyBoyCmd();
@@ -886,17 +953,17 @@ class SMA_SunnyBoy extends eqLogic {
 				$info->setEqLogic_id($this->getId());
 				$info->setType('info');
 				$info->setSubType('numeric');
-				$info->setTemplate('dashboard','line');
-				$info->setTemplate('mobile','line');          
+				$info->setTemplate('dashboard', 'line');
+				$info->setTemplate('mobile', 'line');
 				$info->setConfiguration('minValue', 0);
 				$info->setConfiguration('maxValue', 50);
 				$info->setIsHistorized(1);
 				$info->setUnite('A');
-				$info->setOrder(3);              
+				$info->setOrder(3);
 			}
 			$info->save();
-          
-         	$info = $this->getCmd(null, 'power_l1');
+
+			$info = $this->getCmd(null, 'power_l1');
 			if (!is_object($info)) {
 				$info = new SMA_SunnyBoyCmd();
 				$info->setName(__('Puissance L1', __FILE__));
@@ -904,16 +971,16 @@ class SMA_SunnyBoy extends eqLogic {
 				$info->setEqLogic_id($this->getId());
 				$info->setType('info');
 				$info->setSubType('numeric');
-				$info->setTemplate('dashboard','line');
-				$info->setTemplate('mobile','line');          
+				$info->setTemplate('dashboard', 'line');
+				$info->setTemplate('mobile', 'line');
 				$info->setConfiguration('minValue', -20000);
 				$info->setConfiguration('maxValue', 20000);
 				$info->setIsHistorized(1);
 				$info->setUnite('W');
-				$info->setOrder(4);              
+				$info->setOrder(4);
 			}
 			$info->save();
-          
+
 			$info = $this->getCmd(null, 'sessionID');
 			if (!is_object($info)) {
 				$info = new SMA_SunnyBoyCmd();
@@ -924,10 +991,10 @@ class SMA_SunnyBoy extends eqLogic {
 				$info->setSubType('string');
 				$info->setIsHistorized(0);
 				$info->setIsVisible(0);
-				$info->setOrder(5);              
+				$info->setOrder(5);
 			}
 			$info->save();
-		
+
 			$info = $this->getCmd(null, 'status');
 			if (!is_object($info)) {
 				$info = new SMA_SunnyBoyCmd();
@@ -938,11 +1005,11 @@ class SMA_SunnyBoy extends eqLogic {
 				$info->setSubType('string');
 				$info->setIsHistorized(0);
 				$info->setIsVisible(1);
-				$info->setOrder(6);              
+				$info->setOrder(6);
 			}
 			$info->save();
-		
-     		$refresh = $this->getCmd(null, 'update');
+
+			$refresh = $this->getCmd(null, 'update');
 			if (!is_object($refresh)) {
 				$refresh = new SMA_SunnyBoyCmd();
 				$refresh->setName(__('Rafraîchir', __FILE__));
@@ -950,13 +1017,13 @@ class SMA_SunnyBoy extends eqLogic {
 				$refresh->setLogicalId('update');
 				$refresh->setType('action');
 				$refresh->setSubType('other');
-    			$refresh->setIsVisible(0);
-				$refresh->setOrder(50);              
+				$refresh->setIsVisible(0);
+				$refresh->setOrder(50);
 			}
 			$refresh->save();
-        }
-      
-      	if ($DeviceType == 40) { //Energy Meter Triphasé
+		}
+
+		if ($DeviceType == 40) { //Energy Meter Triphasé
 			$info = $this->getCmd(null, 'balance');
 			if (!is_object($info)) {
 				$info = new SMA_SunnyBoyCmd();
@@ -965,16 +1032,16 @@ class SMA_SunnyBoy extends eqLogic {
 				$info->setEqLogic_id($this->getId());
 				$info->setType('info');
 				$info->setSubType('numeric');
-				$info->setTemplate('dashboard','line');
-				$info->setTemplate('mobile','line');          
+				$info->setTemplate('dashboard', 'line');
+				$info->setTemplate('mobile', 'line');
 				$info->setConfiguration('minValue', -20000);
 				$info->setConfiguration('maxValue', 20000);
 				$info->setIsHistorized(1);
 				$info->setUnite('W');
-				$info->setOrder(1);              
+				$info->setOrder(1);
 			}
 			$info->save();
-          
+
 			$info = $this->getCmd(null, 'voltage_l1');
 			if (!is_object($info)) {
 				$info = new SMA_SunnyBoyCmd();
@@ -983,16 +1050,16 @@ class SMA_SunnyBoy extends eqLogic {
 				$info->setEqLogic_id($this->getId());
 				$info->setType('info');
 				$info->setSubType('numeric');
-				$info->setTemplate('dashboard','line');
-				$info->setTemplate('mobile','line');          
+				$info->setTemplate('dashboard', 'line');
+				$info->setTemplate('mobile', 'line');
 				$info->setConfiguration('minValue', 0);
 				$info->setConfiguration('maxValue', 250);
 				$info->setIsHistorized(1);
 				$info->setUnite('V');
-				$info->setOrder(2);              
+				$info->setOrder(2);
 			}
 			$info->save();
-          
+
 			$info = $this->getCmd(null, 'voltage_l2');
 			if (!is_object($info)) {
 				$info = new SMA_SunnyBoyCmd();
@@ -1001,16 +1068,16 @@ class SMA_SunnyBoy extends eqLogic {
 				$info->setEqLogic_id($this->getId());
 				$info->setType('info');
 				$info->setSubType('numeric');
-				$info->setTemplate('dashboard','line');
-				$info->setTemplate('mobile','line');          
+				$info->setTemplate('dashboard', 'line');
+				$info->setTemplate('mobile', 'line');
 				$info->setConfiguration('minValue', 0);
 				$info->setConfiguration('maxValue', 250);
 				$info->setIsHistorized(1);
 				$info->setUnite('V');
-				$info->setOrder(3);              
+				$info->setOrder(3);
 			}
 			$info->save();
-          
+
 			$info = $this->getCmd(null, 'voltage_l3');
 			if (!is_object($info)) {
 				$info = new SMA_SunnyBoyCmd();
@@ -1019,16 +1086,16 @@ class SMA_SunnyBoy extends eqLogic {
 				$info->setEqLogic_id($this->getId());
 				$info->setType('info');
 				$info->setSubType('numeric');
-				$info->setTemplate('dashboard','line');
-				$info->setTemplate('mobile','line');          
+				$info->setTemplate('dashboard', 'line');
+				$info->setTemplate('mobile', 'line');
 				$info->setConfiguration('minValue', 0);
 				$info->setConfiguration('maxValue', 250);
 				$info->setIsHistorized(1);
 				$info->setUnite('V');
-				$info->setOrder(4);              
+				$info->setOrder(4);
 			}
 			$info->save();
-          
+
 			$info = $this->getCmd(null, 'current_l1');
 			if (!is_object($info)) {
 				$info = new SMA_SunnyBoyCmd();
@@ -1037,16 +1104,16 @@ class SMA_SunnyBoy extends eqLogic {
 				$info->setEqLogic_id($this->getId());
 				$info->setType('info');
 				$info->setSubType('numeric');
-				$info->setTemplate('dashboard','line');
-				$info->setTemplate('mobile','line');          
+				$info->setTemplate('dashboard', 'line');
+				$info->setTemplate('mobile', 'line');
 				$info->setConfiguration('minValue', 0);
 				$info->setConfiguration('maxValue', 50);
 				$info->setIsHistorized(1);
 				$info->setUnite('A');
-				$info->setOrder(5);              
+				$info->setOrder(5);
 			}
 			$info->save();
-          
+
 			$info = $this->getCmd(null, 'current_l2');
 			if (!is_object($info)) {
 				$info = new SMA_SunnyBoyCmd();
@@ -1055,16 +1122,16 @@ class SMA_SunnyBoy extends eqLogic {
 				$info->setEqLogic_id($this->getId());
 				$info->setType('info');
 				$info->setSubType('numeric');
-				$info->setTemplate('dashboard','line');
-				$info->setTemplate('mobile','line');          
+				$info->setTemplate('dashboard', 'line');
+				$info->setTemplate('mobile', 'line');
 				$info->setConfiguration('minValue', 0);
 				$info->setConfiguration('maxValue', 50);
 				$info->setIsHistorized(1);
 				$info->setUnite('A');
-				$info->setOrder(6);              
+				$info->setOrder(6);
 			}
 			$info->save();
-          
+
 			$info = $this->getCmd(null, 'current_l3');
 			if (!is_object($info)) {
 				$info = new SMA_SunnyBoyCmd();
@@ -1073,17 +1140,17 @@ class SMA_SunnyBoy extends eqLogic {
 				$info->setEqLogic_id($this->getId());
 				$info->setType('info');
 				$info->setSubType('numeric');
-				$info->setTemplate('dashboard','line');
-				$info->setTemplate('mobile','line');          
+				$info->setTemplate('dashboard', 'line');
+				$info->setTemplate('mobile', 'line');
 				$info->setConfiguration('minValue', 0);
 				$info->setConfiguration('maxValue', 50);
 				$info->setIsHistorized(1);
 				$info->setUnite('A');
-				$info->setOrder(7);              
+				$info->setOrder(7);
 			}
 			$info->save();
-          
-         	$info = $this->getCmd(null, 'power_l1');
+
+			$info = $this->getCmd(null, 'power_l1');
 			if (!is_object($info)) {
 				$info = new SMA_SunnyBoyCmd();
 				$info->setName(__('Puissance L1', __FILE__));
@@ -1091,17 +1158,17 @@ class SMA_SunnyBoy extends eqLogic {
 				$info->setEqLogic_id($this->getId());
 				$info->setType('info');
 				$info->setSubType('numeric');
-				$info->setTemplate('dashboard','line');
-				$info->setTemplate('mobile','line');          
+				$info->setTemplate('dashboard', 'line');
+				$info->setTemplate('mobile', 'line');
 				$info->setConfiguration('minValue', -20000);
 				$info->setConfiguration('maxValue', 20000);
 				$info->setIsHistorized(1);
 				$info->setUnite('W');
-				$info->setOrder(8);              
+				$info->setOrder(8);
 			}
 			$info->save();
-          
-         	$info = $this->getCmd(null, 'power_l2');
+
+			$info = $this->getCmd(null, 'power_l2');
 			if (!is_object($info)) {
 				$info = new SMA_SunnyBoyCmd();
 				$info->setName(__('Puissance L2', __FILE__));
@@ -1109,17 +1176,17 @@ class SMA_SunnyBoy extends eqLogic {
 				$info->setEqLogic_id($this->getId());
 				$info->setType('info');
 				$info->setSubType('numeric');
-				$info->setTemplate('dashboard','line');
-				$info->setTemplate('mobile','line');          
+				$info->setTemplate('dashboard', 'line');
+				$info->setTemplate('mobile', 'line');
 				$info->setConfiguration('minValue', -20000);
 				$info->setConfiguration('maxValue', 20000);
 				$info->setIsHistorized(1);
 				$info->setUnite('W');
-				$info->setOrder(9);              
+				$info->setOrder(9);
 			}
 			$info->save();
-          
-         	$info = $this->getCmd(null, 'power_l3');
+
+			$info = $this->getCmd(null, 'power_l3');
 			if (!is_object($info)) {
 				$info = new SMA_SunnyBoyCmd();
 				$info->setName(__('Puissance L3', __FILE__));
@@ -1127,16 +1194,16 @@ class SMA_SunnyBoy extends eqLogic {
 				$info->setEqLogic_id($this->getId());
 				$info->setType('info');
 				$info->setSubType('numeric');
-				$info->setTemplate('dashboard','line');
-				$info->setTemplate('mobile','line');          
+				$info->setTemplate('dashboard', 'line');
+				$info->setTemplate('mobile', 'line');
 				$info->setConfiguration('minValue', -20000);
 				$info->setConfiguration('maxValue', 20000);
 				$info->setIsHistorized(1);
 				$info->setUnite('W');
-				$info->setOrder(10);              
+				$info->setOrder(10);
 			}
 			$info->save();
-          
+
 			$info = $this->getCmd(null, 'sessionID');
 			if (!is_object($info)) {
 				$info = new SMA_SunnyBoyCmd();
@@ -1147,10 +1214,10 @@ class SMA_SunnyBoy extends eqLogic {
 				$info->setSubType('string');
 				$info->setIsHistorized(0);
 				$info->setIsVisible(0);
-				$info->setOrder(11);              
+				$info->setOrder(11);
 			}
 			$info->save();
-		
+
 			$info = $this->getCmd(null, 'status');
 			if (!is_object($info)) {
 				$info = new SMA_SunnyBoyCmd();
@@ -1161,11 +1228,11 @@ class SMA_SunnyBoy extends eqLogic {
 				$info->setSubType('string');
 				$info->setIsHistorized(0);
 				$info->setIsVisible(1);
-				$info->setOrder(12);              
+				$info->setOrder(12);
 			}
 			$info->save();
-		
-     		$refresh = $this->getCmd(null, 'update');
+
+			$refresh = $this->getCmd(null, 'update');
 			if (!is_object($refresh)) {
 				$refresh = new SMA_SunnyBoyCmd();
 				$refresh->setName(__('Rafraîchir', __FILE__));
@@ -1173,32 +1240,28 @@ class SMA_SunnyBoy extends eqLogic {
 				$refresh->setLogicalId('update');
 				$refresh->setType('action');
 				$refresh->setSubType('other');
-    			$refresh->setIsVisible(0);
-				$refresh->setOrder(50);              
+				$refresh->setIsVisible(0);
+				$refresh->setOrder(50);
 			}
 			$refresh->save();
-        }
-      
-      	self::deamon_start();
-    }
+		}
 
-    public function preUpdate() {
-        
-    }
+		self::deamon_start();
+	}
 
-    public function postUpdate() {
+	public function preUpdate() {
+	}
 
-    }
+	public function postUpdate() {
+	}
 
-    public function preRemove() {
-       
-    }
+	public function preRemove() {
+	}
 
-    public function postRemove() {
-        
-    }
-  
- 	public function get_string_between($string, $start, $end){
+	public function postRemove() {
+	}
+
+	public function get_string_between($string, $start, $end) {
 		$string = ' ' . $string;
 		$ini = strpos($string, $start);
 		if ($ini == 0) return '';
@@ -1206,46 +1269,46 @@ class SMA_SunnyBoy extends eqLogic {
 		$len = strpos($string, $end, $ini) - $ini;
 		return substr($string, $ini, $len);
 	}
-	
+
 	public function getSmaData() {
 		//REFERENCES
 		//Generated by curl-to-PHP: http://incarnate.github.io/curl-to-php/
 		//https://community.home-assistant.io/t/presenting-sma-converter-values/5033/3
 		//http://pydoc.net/pysma/0.1.3/pysma/
 		//https://community.openhab.org/t/example-on-how-to-access-data-of-a-sunny-boy-sma-solar-inverter/50963/18
-		
+
 		$SMA_IP = $this->getConfiguration("IP");
 		$SMA_Port = $this->getConfiguration("Port");
-      	$SMA_Protocol = $this->getConfiguration("Protocol");
+		$SMA_Protocol = $this->getConfiguration("Protocol");
 		$SMA_PASSWORD = $this->getConfiguration("Password");
 		$SMA_HTTP = '';
-		
-     	$DeviceType = $this->getConfiguration("DeviceType");
-      	//Type 10 = Onduleur Monophasé
-      	//Type 20 = Onduleur Triphasé
-      	//Type 30 = Energy Meter Monophasé
-      	//Type 40 = Energy Meter Triphasé
-      
+
+		$DeviceType = $this->getConfiguration("DeviceType");
+		//Type 10 = Onduleur Monophasé
+		//Type 20 = Onduleur Triphasé
+		//Type 30 = Energy Meter Monophasé
+		//Type 40 = Energy Meter Triphasé
+
 		if (strlen($SMA_IP) == 0) {
-			log::add('SMA_SunnyBoy', 'debug', $this->getHumanName().' -> No IP defined for equipment!');
+			log::add('SMA_SunnyBoy', 'debug', $this->getHumanName() . ' -> No IP defined for equipment!');
 			return;
 		}
-		
+
 		if (strlen($SMA_PASSWORD) == 0) {
-			log::add('SMA_SunnyBoy', 'debug', $this->getHumanName().' -> No password defined for equipment!');
+			log::add('SMA_SunnyBoy', 'debug', $this->getHumanName() . ' -> No password defined for equipment!');
 			return;
 		}
-		
+
 		if (strlen($SMA_Port) == 0) {
 			$SMA_Port = 443;
 		}
-		
+
 		if ($SMA_Protocol == 20) {
 			$SMA_HTTP = 'http';
 		} else {
 			$SMA_HTTP = 'https';
 		}
-		
+
 		$SMA_RIGHT = 'usr';
 		$ch = curl_init();
 		$headers = array();
@@ -1255,7 +1318,7 @@ class SMA_SunnyBoy extends eqLogic {
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 		curl_setopt($ch, CURLOPT_POST, 1);
-		curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_ANY); 
+		curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
 		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
 		// READ STORED SESSION ID
@@ -1266,159 +1329,201 @@ class SMA_SunnyBoy extends eqLogic {
 			}
 		} catch (Exception $e) {
 			$SMA_SID = '';
-			log::add('SMA_SunnyBoy', 'debug', $this->getHumanName().' -> Cannot get Session ID: '.$e);
+			log::add('SMA_SunnyBoy', 'debug', $this->getHumanName() . ' -> Cannot get Session ID: ' . $e);
 		}
-		
+
 		// COLLECTING VALUES
 		$InverterKey = '';
 		$collection = ('{"destDev":[],"keys":[]}');
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $collection);
-		curl_setopt($ch, CURLOPT_URL, $SMA_HTTP.'://'.$SMA_IP.':'.$SMA_Port.'/dyn/getAllOnlValues.json?sid='.$SMA_SID);
+		curl_setopt($ch, CURLOPT_URL, $SMA_HTTP . '://' . $SMA_IP . ':' . $SMA_Port . '/dyn/getAllOnlValues.json?sid=' . $SMA_SID);
 		$data = curl_exec($ch);
-		
+
 		if (curl_errno($ch)) {
-			curl_close ($ch);
-			log::add('SMA_SunnyBoy', 'debug', $this->getHumanName().' -> Cannot get equipment values: '.curl_error($ch));
+			curl_close($ch);
+			log::add('SMA_SunnyBoy', 'debug', $this->getHumanName() . ' -> Cannot get equipment values: ' . curl_error($ch));
 			$this->checkAndUpdateCmd('status', 'Erreur Données');
 		} else {
-          	$InverterKey = $this->get_string_between($data,'result":{"','"');
+			$InverterKey = $this->get_string_between($data, 'result":{"', '"');
 		}
-		
+
 		if ($InverterKey == '') {
 			// LOGIN
-			$credentials = ('{"pass" : "'.$SMA_PASSWORD.'", "right" : "'.$SMA_RIGHT.'"}');
+			$credentials = ('{"pass" : "' . $SMA_PASSWORD . '", "right" : "' . $SMA_RIGHT . '"}');
 			curl_setopt($ch, CURLOPT_POSTFIELDS, $credentials);
-			curl_setopt($ch, CURLOPT_URL, $SMA_HTTP.'://'.$SMA_IP.':'.$SMA_Port.'/dyn/login.json');
+			curl_setopt($ch, CURLOPT_URL, $SMA_HTTP . '://' . $SMA_IP . ':' . $SMA_Port . '/dyn/login.json');
 			$data = curl_exec($ch);
 			if (curl_errno($ch)) {
-				log::add('SMA_SunnyBoy', 'debug', $this->getHumanName().' -> Cannot login to equipment: '.curl_error($ch));
-				curl_close ($ch);
+				log::add('SMA_SunnyBoy', 'debug', $this->getHumanName() . ' -> Cannot login to equipment: ' . curl_error($ch));
+				curl_close($ch);
 				$this->checkAndUpdateCmd('status', 'Erreur Identification');
 				return;
 			} else {
-				curl_close ($ch);
+				curl_close($ch);
 				$json = json_decode($data, true);
 				$SMA_SID = $json['result']['sid'];
 				$this->checkAndUpdateCmd('sessionID', $SMA_SID);
 				$this->checkAndUpdateCmd('status', 'Hors Ligne ...');
-				log::add('SMA_SunnyBoy', 'debug', $this->getHumanName().' -> Getting session ID ...');
+				log::add('SMA_SunnyBoy', 'debug', $this->getHumanName() . ' -> Getting session ID ...');
 				return;
 			}
-			
 		} else {
-          
+
 			$typeID = 0;
-          	if ($DeviceType==10 || $DeviceType==20) {$typeID=1;}
-          	if ($DeviceType==30 || $DeviceType==40) {$typeID=65;}
-          
-       		//Get DC Data
-          	if ($DeviceType==10 || $DeviceType==20) {
-  				$collection = ('{"destDev":[],"keys":["6380_40251E00","6380_40451F00","6380_40452100"]}');
+			if ($DeviceType == 10 || $DeviceType == 20) {
+				$typeID = 1;
+			}
+			if ($DeviceType == 30 || $DeviceType == 40) {
+				$typeID = 65;
+			}
+
+			//Get DC Data
+			if ($DeviceType == 10 || $DeviceType == 20) {
+				$collection = ('{"destDev":[],"keys":["6380_40251E00","6380_40451F00","6380_40452100"]}');
 				curl_setopt($ch, CURLOPT_POSTFIELDS, $collection);
-				curl_setopt($ch, CURLOPT_URL, $SMA_HTTP.'://'.$SMA_IP.':'.$SMA_Port.'/dyn/getValues.json?sid='.$SMA_SID);
+				curl_setopt($ch, CURLOPT_URL, $SMA_HTTP . '://' . $SMA_IP . ':' . $SMA_Port . '/dyn/getValues.json?sid=' . $SMA_SID);
 				$dataDC = curl_exec($ch);
-  				$jsonDC = json_decode($dataDC, true);
-				$currentDC_A = round(floatval(($jsonDC['result'][$InverterKey]['6380_40452100'][$typeID]['0']['val'])/1000),2);
-				$currentDC_B = round(floatval(($jsonDC['result'][$InverterKey]['6380_40452100'][$typeID]['1']['val'])/1000),2);
-				$voltageDC_A = round(floatval(($jsonDC['result'][$InverterKey]['6380_40451F00'][$typeID]['0']['val'])/100),1);
-				$voltageDC_B = round(floatval(($jsonDC['result'][$InverterKey]['6380_40451F00'][$typeID]['1']['val'])/100),1);
-				$powerDC_A = round(floatval(($jsonDC['result'][$InverterKey]['6380_40251E00'][$typeID]['0']['val'])/1),0);
-				$powerDC_B = round(floatval(($jsonDC['result'][$InverterKey]['6380_40251E00'][$typeID]['1']['val'])/1),0);
-            }
-			
-			curl_close ($ch);
+				$jsonDC = json_decode($dataDC, true);
+				$currentDC_A = round(floatval(($jsonDC['result'][$InverterKey]['6380_40452100'][$typeID]['0']['val']) / 1000), 2);
+				$currentDC_B = round(floatval(($jsonDC['result'][$InverterKey]['6380_40452100'][$typeID]['1']['val']) / 1000), 2);
+				$voltageDC_A = round(floatval(($jsonDC['result'][$InverterKey]['6380_40451F00'][$typeID]['0']['val']) / 100), 1);
+				$voltageDC_B = round(floatval(($jsonDC['result'][$InverterKey]['6380_40451F00'][$typeID]['1']['val']) / 100), 1);
+				$powerDC_A = round(floatval(($jsonDC['result'][$InverterKey]['6380_40251E00'][$typeID]['0']['val']) / 1), 0);
+				$powerDC_B = round(floatval(($jsonDC['result'][$InverterKey]['6380_40251E00'][$typeID]['1']['val']) / 1), 0);
+			}
+
+			curl_close($ch);
 
 			$json = json_decode($data, true);
-		
-          	$balance = round(($json['result'][$InverterKey]['6100_40263F00'][$typeID]['0']['val']) * -1,0);
-			$pv_power = round($json['result'][$InverterKey]['6100_0046C200'][$typeID]['0']['val'],0);
-			$pv_total = round(($json['result'][$InverterKey]['6400_00260100'][$typeID]['0']['val'])/1,0);
-			$frequency = round(($json['result'][$InverterKey]['6100_00465700'][$typeID]['0']['val'])/100,1);
-			$voltage_l1 = round(($json['result'][$InverterKey]['6100_00464800'][$typeID]['0']['val'])/100,1);
-			$voltage_l2 = round(($json['result'][$InverterKey]['6100_00464900'][$typeID]['0']['val'])/100,1);
-			$voltage_l3 = round(($json['result'][$InverterKey]['6100_00464A00'][$typeID]['0']['val'])/100,1);
-			$current_l1 = round(($json['result'][$InverterKey]['6100_40465300'][$typeID]['0']['val'])/1000,2);
-			$current_l2 = round(($json['result'][$InverterKey]['6100_40465400'][$typeID]['0']['val'])/1000,2);
-			$current_l3 = round(($json['result'][$InverterKey]['6100_40465500'][$typeID]['0']['val'])/1000,2);
-			$wifi_signal = round($json['result'][$InverterKey]['6100_004AB600'][$typeID]['0']['val'],0);
-           	$power_l1 = round(floatval(($json['result'][$InverterKey]['6100_40464000'][$typeID]['0']['val'])/1),0);
-  			$power_l2 = round(floatval(($json['result'][$InverterKey]['6100_40464100'][$typeID]['0']['val'])/1),0);
-  			$power_l3 = round(floatval(($json['result'][$InverterKey]['6100_40464200'][$typeID]['0']['val'])/1),0);
-			
-          	if ($DeviceType==30 || $DeviceType==40) {$this->checkAndUpdateCmd('balance', $balance);}
-			if ($DeviceType==10 || $DeviceType==20) {$this->checkAndUpdateCmd('pv_power', $pv_power);}
-			if ($DeviceType==10 || $DeviceType==20) {$this->checkAndUpdateCmd('pv_total', $pv_total);}
-			if ($DeviceType==10 || $DeviceType==20) {$this->checkAndUpdateCmd('frequency', $frequency);}
-			if ($DeviceType==10 || $DeviceType==20 || $DeviceType==30 || $DeviceType==40) {$this->checkAndUpdateCmd('voltage_l1', $voltage_l1);}
-			if ($DeviceType==20 || $DeviceType==40) {$this->checkAndUpdateCmd('voltage_l2', $voltage_l2);}
-			if ($DeviceType==20 || $DeviceType==40) {$this->checkAndUpdateCmd('voltage_l3', $voltage_l3);}
-			if ($DeviceType==10 || $DeviceType==20 || $DeviceType==30 || $DeviceType==40) {$this->checkAndUpdateCmd('current_l1', $current_l1);}
-			if ($DeviceType==20 || $DeviceType==40) {$this->checkAndUpdateCmd('current_l2', $current_l2);}
-			if ($DeviceType==20 || $DeviceType==40) {$this->checkAndUpdateCmd('current_l3', $current_l3);}
-        	if ($DeviceType==10 || $DeviceType==20 || $DeviceType==30 || $DeviceType==40) {$this->checkAndUpdateCmd('power_l1', $power_l1);}
-			if ($DeviceType==20 || $DeviceType==40) {$this->checkAndUpdateCmd('power_l2', $power_l2);}
-			if ($DeviceType==20 || $DeviceType==40) {$this->checkAndUpdateCmd('power_l3', $power_l3);}
-          	if ($DeviceType==10 || $DeviceType==20) {$this->checkAndUpdateCmd('voltageDC_A', $voltageDC_A);}
-          	if ($DeviceType==10 || $DeviceType==20) {$this->checkAndUpdateCmd('voltageDC_B', $voltageDC_B);}
-          	if ($DeviceType==10 || $DeviceType==20) {$this->checkAndUpdateCmd('currentDC_A', $currentDC_A);}
-          	if ($DeviceType==10 || $DeviceType==20) {$this->checkAndUpdateCmd('currentDC_B', $currentDC_B);}
-          	if ($DeviceType==10 || $DeviceType==20) {$this->checkAndUpdateCmd('powerDC_A', $powerDC_A);}
-          	if ($DeviceType==10 || $DeviceType==20) {$this->checkAndUpdateCmd('powerDC_B', $powerDC_B);}
-			if ($DeviceType==10 || $DeviceType==20) {$this->checkAndUpdateCmd('wifi_signal', $wifi_signal);}
-			
+
+			$balance = round(($json['result'][$InverterKey]['6100_40263F00'][$typeID]['0']['val']) * -1, 0);
+			$pv_power = round($json['result'][$InverterKey]['6100_0046C200'][$typeID]['0']['val'], 0);
+			$pv_total = round(($json['result'][$InverterKey]['6400_00260100'][$typeID]['0']['val']) / 1, 0);
+			$frequency = round(($json['result'][$InverterKey]['6100_00465700'][$typeID]['0']['val']) / 100, 1);
+			$voltage_l1 = round(($json['result'][$InverterKey]['6100_00464800'][$typeID]['0']['val']) / 100, 1);
+			$voltage_l2 = round(($json['result'][$InverterKey]['6100_00464900'][$typeID]['0']['val']) / 100, 1);
+			$voltage_l3 = round(($json['result'][$InverterKey]['6100_00464A00'][$typeID]['0']['val']) / 100, 1);
+			$current_l1 = round(($json['result'][$InverterKey]['6100_40465300'][$typeID]['0']['val']) / 1000, 2);
+			$current_l2 = round(($json['result'][$InverterKey]['6100_40465400'][$typeID]['0']['val']) / 1000, 2);
+			$current_l3 = round(($json['result'][$InverterKey]['6100_40465500'][$typeID]['0']['val']) / 1000, 2);
+			$wifi_signal = round($json['result'][$InverterKey]['6100_004AB600'][$typeID]['0']['val'], 0);
+			$power_l1 = round(floatval(($json['result'][$InverterKey]['6100_40464000'][$typeID]['0']['val']) / 1), 0);
+			$power_l2 = round(floatval(($json['result'][$InverterKey]['6100_40464100'][$typeID]['0']['val']) / 1), 0);
+			$power_l3 = round(floatval(($json['result'][$InverterKey]['6100_40464200'][$typeID]['0']['val']) / 1), 0);
+
+			if ($DeviceType == 30 || $DeviceType == 40) {
+				$this->checkAndUpdateCmd('balance', $balance);
+			}
+			if ($DeviceType == 10 || $DeviceType == 20) {
+				$this->checkAndUpdateCmd('pv_power', $pv_power);
+			}
+			if ($DeviceType == 10 || $DeviceType == 20) {
+				$this->checkAndUpdateCmd('pv_total', $pv_total);
+			}
+			if ($DeviceType == 10 || $DeviceType == 20) {
+				$this->checkAndUpdateCmd('frequency', $frequency);
+			}
+			if ($DeviceType == 10 || $DeviceType == 20 || $DeviceType == 30 || $DeviceType == 40) {
+				$this->checkAndUpdateCmd('voltage_l1', $voltage_l1);
+			}
+			if ($DeviceType == 20 || $DeviceType == 40) {
+				$this->checkAndUpdateCmd('voltage_l2', $voltage_l2);
+			}
+			if ($DeviceType == 20 || $DeviceType == 40) {
+				$this->checkAndUpdateCmd('voltage_l3', $voltage_l3);
+			}
+			if ($DeviceType == 10 || $DeviceType == 20 || $DeviceType == 30 || $DeviceType == 40) {
+				$this->checkAndUpdateCmd('current_l1', $current_l1);
+			}
+			if ($DeviceType == 20 || $DeviceType == 40) {
+				$this->checkAndUpdateCmd('current_l2', $current_l2);
+			}
+			if ($DeviceType == 20 || $DeviceType == 40) {
+				$this->checkAndUpdateCmd('current_l3', $current_l3);
+			}
+			if ($DeviceType == 10 || $DeviceType == 20 || $DeviceType == 30 || $DeviceType == 40) {
+				$this->checkAndUpdateCmd('power_l1', $power_l1);
+			}
+			if ($DeviceType == 20 || $DeviceType == 40) {
+				$this->checkAndUpdateCmd('power_l2', $power_l2);
+			}
+			if ($DeviceType == 20 || $DeviceType == 40) {
+				$this->checkAndUpdateCmd('power_l3', $power_l3);
+			}
+			if ($DeviceType == 10 || $DeviceType == 20) {
+				$this->checkAndUpdateCmd('voltageDC_A', $voltageDC_A);
+			}
+			if ($DeviceType == 10 || $DeviceType == 20) {
+				$this->checkAndUpdateCmd('voltageDC_B', $voltageDC_B);
+			}
+			if ($DeviceType == 10 || $DeviceType == 20) {
+				$this->checkAndUpdateCmd('currentDC_A', $currentDC_A);
+			}
+			if ($DeviceType == 10 || $DeviceType == 20) {
+				$this->checkAndUpdateCmd('currentDC_B', $currentDC_B);
+			}
+			if ($DeviceType == 10 || $DeviceType == 20) {
+				$this->checkAndUpdateCmd('powerDC_A', $powerDC_A);
+			}
+			if ($DeviceType == 10 || $DeviceType == 20) {
+				$this->checkAndUpdateCmd('powerDC_B', $powerDC_B);
+			}
+			if ($DeviceType == 10 || $DeviceType == 20) {
+				$this->checkAndUpdateCmd('wifi_signal', $wifi_signal);
+			}
+
 			$this->checkAndUpdateCmd('status', 'OK');
-			log::add('SMA_SunnyBoy', 'debug', $this->getHumanName().' -> All good: Session ID='.$SMA_SID.', Equipment Key ='.$InverterKey.' , Data='.$data);
-              
+			log::add('SMA_SunnyBoy', 'debug', $this->getHumanName() . ' -> All good: Session ID=' . $SMA_SID . ', Equipment Key =' . $InverterKey . ' , Data=' . $data);
+
 			return;
 		}
-		
 	}
-	
-    /*
+
+	/*
      * Non obligatoire mais permet de modifier l'affichage du widget si vous en avez besoin
       public function toHtml($_version = 'dashboard') {
 
       }
      */
 
-    /*
+	/*
      * Non obligatoire mais ca permet de déclencher une action après modification de variable de configuration
     public static function postConfig_<Variable>() {
     }
      */
 
-    /*
+	/*
      * Non obligatoire mais ca permet de déclencher une action avant modification de variable de configuration
     public static function preConfig_<Variable>() {
     }
      */
 
-    /*     * **********************Getteur Setteur*************************** */
+	/*     * **********************Getteur Setteur*************************** */
 }
 
 class SMA_SunnyBoyCmd extends cmd {
-    /*     * *************************Attributs****************************** */
+	/*     * *************************Attributs****************************** */
 
 
-    /*     * ***********************Methode static*************************** */
+	/*     * ***********************Methode static*************************** */
 
 
-    /*     * *********************Methode d'instance************************* */
+	/*     * *********************Methode d'instance************************* */
 
-    /*
+	/*
      * Non obligatoire permet de demander de ne pas supprimer les commandes même si elles ne sont pas dans la nouvelle configuration de l'équipement envoyé en JS
       public function dontRemoveCmd() {
       return true;
       }
      */
 
-    public function execute($_options = array()) {
-				$eqlogic = $this->getEqLogic();
-				switch ($this->getLogicalId()) {
-                    case 'update':
-						$info = $eqlogic->getSmaData();
-						break;					
+	public function execute($_options = array()) {
+		$eqlogic = $this->getEqLogic();
+		switch ($this->getLogicalId()) {
+			case 'update':
+				$info = $eqlogic->getSmaData();
+				break;
 		}
-    }
-    /*     * **********************Getteur Setteur*************************** */
+	}
+	/*     * **********************Getteur Setteur*************************** */
 }
